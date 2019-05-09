@@ -18,6 +18,9 @@ class RWMB_OSM_Field extends RWMB_Field {
 		wp_enqueue_style( 'leaflet', 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.css', array(), '1.5.1' );
 		wp_enqueue_script( 'leaflet', 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.js', array(), '1.5.1', true );
 
+		// Not sure if we need to include this yet...
+		//wp_enqueue_script( 'leaflet-providers', RWMB_JS_URL . 'leaflet-providers.js', array('leaflet'), '1.6.0', true );
+
 		wp_enqueue_style( 'rwmb-osm', RWMB_CSS_URL . 'osm.css', array( 'leaflet' ), RWMB_VER );
 		wp_enqueue_script( 'rwmb-osm', RWMB_JS_URL . 'osm.js', array( 'jquery', 'jquery-ui-autocomplete', 'leaflet' ), RWMB_VER, true );
 
@@ -46,11 +49,15 @@ class RWMB_OSM_Field extends RWMB_Field {
 		);
 
 		$html .= sprintf(
-			'<div class="rwmb-osm-canvas" data-default-loc="%s" data-region="%s" data-language="%s"></div>
+			'<div class="rwmb-osm-canvas" data-default-loc="%s" data-region="%s" data-language="%s" data-tile-server="%s" data-tile-id="%s" data-access-token="%s" data-attribution="%s"></div>
 			<input type="hidden" name="%s" class="rwmb-osm-coordinate" value="%s">',
 			esc_attr( $field['std'] ),
 			esc_attr( $field['region'] ),
 			esc_attr( $field['language'] ),
+			esc_attr( $field['tile_server'] ),
+			esc_attr( $field['tile_id'] ),
+			esc_attr( $field['access_token'] ),
+			esc_attr( $field['attribution'] ),
 			esc_attr( $field['field_name'] ),
 			esc_attr( $meta )
 		);
@@ -83,6 +90,10 @@ class RWMB_OSM_Field extends RWMB_Field {
 				'address_field' => '',
 				'language'      => '',
 				'region'        => '',
+				'tile_server'   => '',
+				'tile_id'   		=> '',
+				'access_token'  => '',
+				'attribution'   => '',
 			)
 		);
 

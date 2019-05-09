@@ -35,12 +35,37 @@
 			defaultLoc = defaultLoc ? defaultLoc.split( ',' ) : [53.346881, -6.258860];
 			latLng = L.latLng( defaultLoc[0], defaultLoc[1] ); // Initial position for map.
 
+			var tile_server = this.$canvas.data( 'tile-server' );
+			tile_server = tile_server ? tile_server : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+			var tile_id = this.$canvas.data( 'tile-id' );
+			tile_id = tile_id ? tile_id : '';
+
+			var attribution = this.$canvas.data( 'attribution' );
+			attribution = attribution ? attribution : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
+			var accessToken = this.$canvas.data( 'access-token' );
+			accessToken = accessToken ? accessToken : '';
+
 			this.map = L.map( this.canvas, {
 				center: latLng,
 				zoom: 14
 			} );
-			L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+
+			/*
+			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+			    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+			    maxZoom: 18,
+			    id: 'mapbox.streets',
+			    accessToken: 'your.mapbox.access.token'
+			}).addTo(mymap);
+			*/
+
+			L.tileLayer( tile_server, {
+				id: tile_id,
+				attribution: attribution,
+				accessToken: accessToken,
+
 			} ).addTo( this.map );
 			this.marker = L.marker( latLng, {
 				draggable: true
