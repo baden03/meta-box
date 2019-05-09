@@ -162,7 +162,8 @@
 						format: 'json',
 						q: request.term,
 						countrycodes: that.$canvas.data( 'region' ),
-						"accept-language": that.$canvas.data( 'language' )
+						"accept-language": that.$canvas.data( 'language' ),
+						addressdetails: 1,
 					}, function( results ) {
 						if ( ! results.length ) {
 							response( [ {
@@ -172,21 +173,26 @@
 							return;
 						}
 						response( results.map( function ( item ) {
+							console.log(item);
 							return {
 								label: item.display_name,
 								value: item.display_name,
 								latitude: item.lat,
-								longitude: item.lon
+								longitude: item.lon,
+								/* here go the rest of the address details */
 							};
 						} ) );
 					}, 'json' );
 				},
 				select: function ( event, ui ) {
+					console.log(ui.item);
 					var latLng = L.latLng( ui.item.latitude, ui.item.longitude );
 
 					that.map.panTo( latLng );
 					that.marker.setLatLng( latLng );
 					that.updateCoordinate( latLng );
+
+					//map the details to any field here
 				}
 			} );
 		},
@@ -210,11 +216,13 @@
 				q: address,
 				limit: 1,
 				countrycodes: that.$canvas.data( 'region' ),
-				"accept-language": that.$canvas.data( 'language' )
+				"accept-language": that.$canvas.data( 'language' ),
+				addressdetails: 1,
 			}, function( result ) {
 				if ( result.length !== 1 ) {
 					return;
 				}
+
 				var latLng = L.latLng( result[0].lat, result[0].lon );
 				that.map.panTo( latLng );
 				that.marker.setLatLng( latLng );
