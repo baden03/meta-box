@@ -41,38 +41,38 @@ class RWMB_OSM_Field extends RWMB_Field {
 	 *
 	 * @return string
 	 */
-	public static function html( $meta, $field ) {
-		$address = is_array( $field['address_field'] ) ? implode( ',', $field['address_field'] ) : $field['address_field'];
-		$html    = sprintf(
-			'<div class="rwmb-osm-field" data-address-field="%s">',
-			esc_attr( $address )
-		);
+	 public static function html( $meta, $field ) {
+ 		$address = is_array( $field['address_field'] ) ? implode( ',', $field['address_field'] ) : $field['address_field'];
+ 		$html    = sprintf(
+ 			'<div class="rwmb-osm-field" data-address-field="%s">',
+ 			esc_attr( $address )
+ 		);
 
-		$html .= sprintf(
-			'<div class="rwmb-osm-canvas" data-default-loc="%s" data-region="%s" data-language="%s" data-tile-server="%s" data-tile-id="%s" data-access-token="%s" data-attribution="%s"></div>
-			<input type="hidden" name="%s" class="rwmb-osm-coordinate" value="%s">',
-			esc_attr( $field['std'] ),
-			esc_attr( $field['region'] ),
-			esc_attr( $field['language'] ),
-			esc_attr( $field['tile_server'] ),
-			esc_attr( $field['tile_id'] ),
-			esc_attr( $field['access_token'] ),
-			esc_attr( $field['attribution'] ),
-			esc_attr( $field['field_name'] ),
-			esc_attr( $meta )
-		);
+ 		$html .= sprintf(
+ 			'<div class="rwmb-osm-canvas" data-default-loc="%s" data-region="%s" data-language="%s" data-tile-server="%s" data-tile-id="%s" data-access-token="%s" data-attribution="%s"></div>
+ 			<input type="hidden" name="%s" class="rwmb-osm-coordinate" value="%s">',
+ 			esc_attr( $field['std'] ),
+ 			esc_attr( $field['region'] ),
+ 			esc_attr( $field['language'] ),
+ 			esc_attr( $field['tile_server'] ),
+ 			esc_attr( $field['tile_id'] ),
+ 			esc_attr( $field['access_token'] ),
+ 			esc_attr( $field['attribution'] ),
+ 			esc_attr( $field['field_name'] ),
+ 			esc_attr( $meta )
+ 		);
 
-		if ( $field['address_field'] ) {
-			$html .= sprintf(
-				'<button class="button rwmb-osm-goto-address-button">%s</button>',
-				esc_html__( 'Find Address', 'meta-box' )
-			);
-		}
+ 		if ( $field['address_field'] ) {
+ 			$html .= sprintf(
+ 				'<button class="button rwmb-osm-goto-address-button">%s</button>',
+ 				esc_html__( 'Find Address', 'meta-box' )
+ 			);
+ 		}
 
-		$html .= '</div>';
+ 		$html .= '</div>';
 
-		return $html;
-	}
+ 		return $html;
+ 	}
 
 	/**
 	 * Normalize parameters for field.
@@ -81,24 +81,24 @@ class RWMB_OSM_Field extends RWMB_Field {
 	 *
 	 * @return array
 	 */
-	public static function normalize( $field ) {
-		$field = parent::normalize( $field );
-		$field = wp_parse_args(
-			$field,
-			array(
-				'std'           => '',
-				'address_field' => '',
-				'language'      => '',
-				'region'        => '',
-				'tile_server'   => '',
-				'tile_id'   		=> '',
-				'access_token'  => '',
-				'attribution'   => '',
-			)
-		);
+	 public static function normalize( $field ) {
+ 		$field = parent::normalize( $field );
+ 		$field = wp_parse_args(
+ 			$field,
+ 			array(
+ 				'std'           => '',
+ 				'address_field' => '',
+ 				'language'      => '',
+ 				'region'        => '',
+ 				'tile_server'   => '',
+ 				'tile_id'   		=> '',
+ 				'access_token'  => '',
+ 				'attribution'   => '',
+ 			)
+ 		);
 
-		return $field;
-	}
+ 		return $field;
+ 	}
 
 	/**
 	 * Get the field value.
