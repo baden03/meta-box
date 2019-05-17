@@ -156,51 +156,82 @@
 				return;
 			}
 
+			// autocomplete using opencage rather than nominatim
 			$address.autocomplete( {
 				source: function ( request, response ) {
-					$.get( 'https://nominatim.openstreetmap.org/search', {
+					$.get( 'https://api.opencagedata.com/geocode/v1/json', {
 						format: 'json',
 						q: request.term,
+						key: 'must_pass_api_key_here',
 						countrycodes: that.$canvas.data( 'region' ),
-						"accept-language": that.$canvas.data( 'language' ),
-						addressdetails: 1,
+						language: that.$canvas.data( 'language' ),
 					}, function( results ) {
-						if ( ! results.length ) {
+						if ( ! results.results.length ) {
 							response( [ {
 								value: '',
-								label: RWMB_Osm.no_results_string
+								label: RWMB_Osm_Advanced.no_results_string
 							} ] );
 							return;
 						}
-						response( results.map( function ( item ) {
-							console.log(item);
+						response( results.results.map( function ( item ) {
+							item.components.streetaddress = item.components.road + ' ' + item.components.house_number;
 							return {
-								label: item.display_name,
-								value: item.display_name,
-								latitude: item.lat,
-								longitude: item.lon,
-								/* here go the rest of the address details */
+								label: item.formatted,
+								value: item.formatted,
+								latitude: item.geometry.lat,
+								longitude: item.geometry.lng,
+								address: item.components,
 							};
+
 						} ) );
 					}, 'json' );
 				},
 				select: function ( event, ui ) {
-					console.log(ui.item);
 					var latLng = L.latLng( ui.item.latitude, ui.item.longitude );
 
 					that.map.panTo( latLng );
 					that.marker.setLatLng( latLng );
 					that.updateCoordinate( latLng );
-
-					//map the details to any field here
+					that.updateDetails ( ui.item.address );
 				}
 			} );
 		},
 
-		// Update coordinate to input field
+		// Update coordinate to input field.
 		updateCoordinate: function ( latLng ) {
 			var zoom = this.map.getZoom();
 			this.$coordinate.val( latLng.lat + ',' + latLng.lng + ',' + zoom );
+
+			// update seperate lat and long input fields if they exist.
+			if( $( 'input[name="latitude"]').length ){
+				$( 'input[name="latitude"]').val(latLng.lat);
+			}
+			if( $( 'input[binding="latitude"]').length ){
+				$( 'input[binding="latitude"]').val(latLng.lat);
+			}
+
+			if( $( 'input[name="longitude"]').length ){
+				$( 'input[name="longitude"]').val(latLng.lng);
+			}
+			if( $( 'input[binding="longitude"]').length ){
+				$( 'input[binding="longitude"]').val(latLng.lng);
+			}
+		},
+
+		// Update address details to matching or binded input fields.
+		updateDetails: function ( address ) {
+			const entries = Object.entries(address);
+
+			for (const [key, val] of entries) {
+				if( val ){
+					if( $( 'input[name="' + key + '"]').length ){
+						$( 'input[name="' + key + '"]').val(val);
+					}
+					if( $( 'input[binding="' + key + '"]').length ){
+						$( 'input[binding="' + key + '"]').val(val);
+					}
+				}
+			}
 		},
 
 		// Find coordinates by address
